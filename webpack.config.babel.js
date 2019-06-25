@@ -1,8 +1,14 @@
+const path = require('path');
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
-import CleanWebpackPlugin from 'clean-webpack-plugin'
+import WebpackMd5Hash from 'webpack-md5-hash'
 
 export default {
+	entry: { main: './src/index.js' },
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].[chunkhash].js'
+  },
 	module: {
 		rules: [
 			{
@@ -12,38 +18,30 @@ export default {
 					loader: "babel-loader"
 				}
 			},
-			{
-				test: /\.html$/,
-				use: [{
-					loader: 'html-loader',
-					options: { minimize: true }
-				}]
-			},
+			// {
+			// 	test: /\.html$/,
+			// 	use: [{
+			// 		loader: 'html-loader',
+			// 		options: { minimize: true }
+			// 	}]
+			// },
 			{
         test: /\.s(a|c)ss$/,
-        use: [
-					"style-loader",
-					"css-loader",
-					"sass-loader"
-				]
+        use: ['style-loader', MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
       }
 		]
 	},
-
-	resolve: {
-    extensions: ['.js', '.scss']
-	},
 	
 	plugins: [
-		new HtmlWebpackPlugin({
-			title: 'Custom template',
-			template: "./src/index.html",
-			filename: "./index.html"
-		}),
 		new MiniCssExtractPlugin({
-			filename: '[name].css',
-			chunkFilename: '[id].css'
+			filename: 'style.[contenthash].css',
 		}),
-		new CleanWebpackPlugin()
+		new HtmlWebpackPlugin({
+			inject: false,
+      hash: true,
+      template: './src/index.html',
+      filename: 'index.html'
+		}),
+		new WebpackMd5Hash()
 	]
 };
