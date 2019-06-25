@@ -1,5 +1,6 @@
-import HtmlWebpackPlugin from 'html-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import CleanWebpackPlugin from 'clean-webpack-plugin'
 
 export default {
 	module: {
@@ -42,6 +43,7 @@ export default {
 		new MiniCssExtractPlugin({
 			filename: '[name].css',
 			chunkFilename: '[id].css'
-		})
+		}),
+		new CleanWebpackPlugin()
 	]
 };
